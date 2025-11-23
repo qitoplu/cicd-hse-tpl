@@ -1,27 +1,16 @@
 name: CI/CD Pipeline
 
 on:
-  push:
-    branches: ["main"]
   workflow_dispatch:
-    inputs:
-      target:
-        description: "Куда деплоим?"
-        required: true
-        type: choice
-        options:
-          - testing
-          - preprod
-          - production
-
-permissions:
-  contents: read
-  packages: write
 
 jobs:
-  build-image:
+  start-job:
     runs-on: ubuntu-latest
-    if: github.event_name == 'push'
+    steps:
+      - run: echo "Starting"
+
+  build-n-push-image:
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
 
@@ -38,25 +27,4 @@ jobs:
           context: .
           push: true
           tags: ghcr.io/${{ github.repository }}/fastapi-app:${{ github.sha }}
-
-  deploy-testing:
-    runs-on: ubuntu-latest
-    needs: build-image
-    if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.target == 'testing' }}
-    steps:
-      - run: echo "Deploy to TESTING"
-
-  deploy-preprod:
-    runs-on: ubuntu-latest
-    needs: build-image
-    if: github.event_name == 'workflow_dispatch' && github.event.inputs.target == 'preprod'
-    steps:
-      - run: echo "Deploy to PRESTABLE"
-
-  deploy-production:
-    runs-on: ubuntu-latest
-    needs: build-image
-    if: github.event_name == 'workflow_dispatch' && github.event.inputs.target == 'production'
-    steps:
-      - run: echo "Deploy to PRODUCTION"
 
