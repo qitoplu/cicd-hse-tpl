@@ -17,6 +17,7 @@ jobs:
       run: echo "SHORT_SHA=${GITHUB_SHA::7}" >> $GITHUB_ENV
   
   login-to-registry:
+    runs-on: ubuntu-latest
     steps: 
     - name: Login to GitHub Container Registry
       uses: docker/login-action@v3
@@ -26,6 +27,7 @@ jobs:
         password: ${{ secrets.GITHUB_TOKEN }}
 
   build-n-push-image: 
+    runs-on: ubuntu-latest 
     steps:
     - name: Build and push
       uses: docker/build-push-action@v5
