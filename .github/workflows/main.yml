@@ -1,16 +1,17 @@
-name: CI/CD Pipeline
+name: Build docker
 
 on:
   workflow_dispatch:
 
 jobs:
-  start-job:
+  start-deploy-pipeline:
     runs-on: ubuntu-latest
     steps:
-      - run: echo "Starting"
+      - run: echo "Starting..."
 
   build-n-push-image:
     runs-on: ubuntu-latest
+    needs: start-deploy-pipeline
     steps:
       - uses: actions/checkout@v3
 
